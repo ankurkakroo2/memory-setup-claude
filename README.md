@@ -127,7 +127,6 @@ memory-setup-claude/
 ├── test_claude_memory.sh     # Validation script
 ├── README.md                 # This file
 ├── LLD.md                    # Low-level design document
-├── openmemory.md             # OpenMemory guide
 └── claude-mem0.env.example   # Legacy template
 ```
 
