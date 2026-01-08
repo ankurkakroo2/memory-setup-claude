@@ -16,13 +16,42 @@ This project integrates [Mem0 Platform](https://mem0.ai) with [Claude Code](http
 
 ## Quick Start
 
-### Prerequisites
+### 🚀 Automated Setup (Recommended)
+
+The easiest way to get started:
+
+```bash
+cd /Users/ankur/D/Playground/mem0
+./setup.sh
+```
+
+The interactive setup wizard will guide you through:
+- ✓ Prerequisites checking
+- ✓ Mem0 account setup
+- ✓ API key configuration
+- ✓ Environment file creation
+- ✓ MCP configuration
+- ✓ Validation testing
+
+**Features:**
+- 🎨 Beautiful colored terminal UI
+- 📋 Step-by-step guidance
+- ✅ Automatic validation
+- 🔒 Secure configuration
+
+---
+
+### Manual Setup (Alternative)
+
+If you prefer manual setup:
+
+#### Prerequisites
 
 - Claude Code installed ([Install guide](https://code.claude.com/docs/en/overview))
 - Python 3.10+ with `uv` package manager
 - Mem0 Platform account ([Sign up](https://app.mem0.ai))
 
-### Setup
+#### Setup Steps
 
 1. **Clone and navigate to the repository**
    ```bash
@@ -33,7 +62,7 @@ This project integrates [Mem0 Platform](https://mem0.ai) with [Claude Code](http
    ```bash
    # Copy the example file
    cp .env.example .env
-   
+
    # Edit .env and add your credentials
    nano .env
    ```
@@ -51,7 +80,7 @@ This project integrates [Mem0 Platform](https://mem0.ai) with [Claude Code](http
    ```
 
 4. **Configure MCP for Claude Code**
-   
+
    The `~/.mcp.json` file should already be configured. Verify it exists:
    ```bash
    cat ~/.mcp.json
@@ -59,10 +88,8 @@ This project integrates [Mem0 Platform](https://mem0.ai) with [Claude Code](http
 
 5. **Test the integration**
    ```bash
-   claude
+   claude --print --dangerously-skip-permissions "Remember that I prefer TypeScript"
    ```
-   
-   Try: "Remember that I prefer TypeScript for new projects"
 
 ### Auto-load Environment (Optional)
 
@@ -88,33 +115,34 @@ See [LLD.md](LLD.md) for detailed architecture documentation including:
 mem0/
 ├── .env                      # Your config (git-ignored)
 ├── .env.example              # Template for .env
-├── claude-mem0.env.example   # Legacy template
 ├── .gitignore                # Git ignore rules
-├── LLD.md                    # Low-level design document
+├── setup.sh                  # 🚀 Interactive setup wizard
+├── test_claude_memory.sh     # Validation script
 ├── README.md                 # This file
-└── openmemory.md             # OpenMemory guide
+├── LLD.md                    # Low-level design document
+├── VALIDATION_REPORT.md      # Test results
+├── openmemory.md             # OpenMemory guide
+└── claude-mem0.env.example   # Legacy template
 ```
 
 ## Usage Examples
 
 ### Personal Preferences
 
-```
-You: "Remember that I prefer pytest over unittest for Python testing"
-Claude: [Uses add_memory] "I've saved your testing preference."
-
-You: "What's my Python testing framework preference?"
-Claude: [Uses search_memories] "You prefer pytest over unittest."
+```bash
+source .env
+claude --print --dangerously-skip-permissions "Remember I prefer pytest over unittest"
 ```
 
-### Project-Specific Memory
-
+Later:
+```bash
+claude --print --dangerously-skip-permissions "What's my Python testing preference?"
 ```
-You: "For this project, remember we're using FastAPI with PostgreSQL"
-Claude: [Saves project context]
 
-You: (later) "What stack is this project using?"
-Claude: "This project uses FastAPI with PostgreSQL."
+### Search Memories
+
+```bash
+claude --print --dangerously-skip-permissions "Search my memories for programming preferences"
 ```
 
 ## Configuration Files
@@ -124,7 +152,7 @@ Claude: "This project uses FastAPI with PostgreSQL."
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `MEM0_API_KEY` | Your Mem0 Platform API key | `m0-xxx...` |
-| `MEM0_DEFAULT_USER_ID` | Your unique user identifier | `ankur` |
+| `MEM0_DEFAULT_USER_ID` | Your unique user identifier | `ankur@example.com` |
 | `MEM0_ENABLE_GRAPH_DEFAULT` | Enable graph memory features | `false` |
 
 ### MCP Configuration (~/.mcp.json)
@@ -163,6 +191,8 @@ All devices will automatically share the same memory!
 ### "uvx command not found"
 
 ```bash
+brew install uv  # macOS
+# or
 pip install uv
 ```
 
@@ -208,6 +238,16 @@ Claude Code has access to these MCP tools:
 - ❌ Don't hardcode API keys in code
 - ❌ Don't use the same API key for public projects
 
+## Validation
+
+Run the validation script to test your setup:
+
+```bash
+./test_claude_memory.sh
+```
+
+See [VALIDATION_REPORT.md](VALIDATION_REPORT.md) for detailed test results.
+
 ## Resources
 
 - [Claude Code Documentation](https://code.claude.com/docs/en/overview)
@@ -230,6 +270,5 @@ This integration setup is for personal use. Refer to:
 
 ---
 
-**Last Updated:** January 7, 2026  
-**Status:** Active Development
-
+**Last Updated:** January 7, 2026
+**Status:** Validated & Production Ready ✅
