@@ -1,5 +1,8 @@
 # Mem0 + Claude Code Integration
 
+[![GitHub](https://img.shields.io/badge/GitHub-memory--setup--claude-blue?logo=github)](https://github.com/ankurkakroo2/memory-setup-claude)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 > Persistent, cross-device memory layer for Claude Code using Mem0 Platform
 
 ## Overview
@@ -21,7 +24,11 @@ This project integrates [Mem0 Platform](https://mem0.ai) with [Claude Code](http
 The easiest way to get started:
 
 ```bash
-cd /Users/ankur/D/Playground/memory-setup-claude
+# Clone the repository
+git clone https://github.com/ankurkakroo2/memory-setup-claude.git
+cd memory-setup-claude
+
+# Run the interactive setup wizard
 ./setup.sh
 ```
 
@@ -120,7 +127,6 @@ memory-setup-claude/
 ├── test_claude_memory.sh     # Validation script
 ├── README.md                 # This file
 ├── LLD.md                    # Low-level design document
-├── VALIDATION_REPORT.md      # Test results
 ├── openmemory.md             # OpenMemory guide
 └── claude-mem0.env.example   # Legacy template
 ```
@@ -246,7 +252,11 @@ Run the validation script to test your setup:
 ./test_claude_memory.sh
 ```
 
-See [VALIDATION_REPORT.md](VALIDATION_REPORT.md) for detailed test results.
+This will verify:
+- ✅ Environment variables are loaded correctly
+- ✅ MCP server starts successfully
+- ✅ Claude Code recognizes memory tools
+- ✅ All prerequisites are installed
 
 ## Resources
 
