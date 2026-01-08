@@ -117,9 +117,9 @@ EOF
 check_prerequisites() {
     print_header "Prerequisites Check"
     print_step "1" "Verifying system requirements"
-    
+
     local all_good=true
-    
+
     # Check OS
     if [[ "$OSTYPE" == "darwin"* ]]; then
         print_success "macOS detected"
@@ -128,7 +128,7 @@ check_prerequisites() {
     else
         print_warning "Unsupported OS: $OSTYPE (may still work)"
     fi
-    
+
     # Check Claude Code
     if command -v claude &> /dev/null; then
         CLAUDE_VERSION=$(claude --version 2>&1 | head -n1)
@@ -138,7 +138,7 @@ check_prerequisites() {
         print_info "Install from: ${CYAN}https://code.claude.com${NC}"
         all_good=false
     fi
-    
+
     # Check Python
     if command -v python3 &> /dev/null; then
         PYTHON_VERSION=$(python3 --version)
@@ -147,7 +147,7 @@ check_prerequisites() {
         print_error "Python 3 not found"
         all_good=false
     fi
-    
+
     # Check uv/uvx
     if command -v uvx &> /dev/null; then
         UV_VERSION=$(uv --version 2>&1)
@@ -167,14 +167,14 @@ check_prerequisites() {
             all_good=false
         fi
     fi
-    
+
     echo ""
-    
+
     if [ "$all_good" = false ]; then
         print_error "Some prerequisites are missing. Please install them and run setup again."
         exit 1
     fi
-    
+
     print_success "All prerequisites satisfied!"
     wait_for_enter
 }
@@ -182,10 +182,10 @@ check_prerequisites() {
 setup_mem0_account() {
     print_header "Mem0 Platform Setup"
     print_step "2" "Setting up your Mem0 account"
-    
+
     print_info "You need a Mem0 Platform account to continue."
     echo ""
-    
+
     if confirm_action "Do you have a Mem0 account?"; then
         print_success "Great! Let's continue..."
     else
@@ -198,11 +198,11 @@ setup_mem0_account() {
         echo "   2. Verify your email"
         echo "   3. Come back here when ready"
         echo ""
-        
+
         if [[ "$OSTYPE" == "darwin"* ]]; then
             open "https://app.mem0.ai" 2>/dev/null || true
         fi
-        
+
         wait_for_enter
     fi
 }
@@ -210,7 +210,7 @@ setup_mem0_account() {
 get_api_key() {
     print_header "API Key Configuration"
     print_step "3" "Getting your Mem0 API key"
-    
+
     echo -e "   ${CYAN}https://app.mem0.ai/settings/api-keys${NC}"
     echo ""
     print_info "Steps to get your API key:"
@@ -219,17 +219,17 @@ get_api_key() {
     echo "   3. Create a new API key"
     echo "   4. Copy the key (starts with 'm0-')"
     echo ""
-    
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
         if confirm_action "Open API keys page in browser?"; then
             open "https://app.mem0.ai/settings/api-keys" 2>/dev/null || true
         fi
     fi
-    
+
     echo ""
     ask_question "Paste your Mem0 API key here:"
     read -r MEM0_API_KEY
-    
+
     # Validate API key format
     if [[ ! "$MEM0_API_KEY" =~ ^m0- ]]; then
         print_warning "API key should start with 'm0-'"
@@ -238,7 +238,7 @@ get_api_key() {
             return
         fi
     fi
-    
+
     print_success "API key saved"
     echo ""
 }
@@ -246,7 +246,7 @@ get_api_key() {
 get_user_id() {
     print_header "User ID Configuration"
     print_step "4" "Setting your user identifier"
-    
+
     print_info "This ID identifies YOU across all devices."
     print_info "Use the same ID on all your machines for memory sync."
     echo ""
@@ -255,16 +255,16 @@ get_user_id() {
     echo "   • Your GitHub username"
     echo "   • Any unique identifier"
     echo ""
-    
+
     ask_question "Enter your user ID:"
     read -r MEM0_USER_ID
-    
+
     if [ -z "$MEM0_USER_ID" ]; then
         print_error "User ID cannot be empty"
         get_user_id
         return
     fi
-    
+
     print_success "User ID set to: ${GREEN}$MEM0_USER_ID${NC}"
     echo ""
     print_warning "IMPORTANT: Use '${GREEN}$MEM0_USER_ID${NC}' on all your devices!"
@@ -274,11 +274,11 @@ get_user_id() {
 create_env_file() {
     print_header "Environment Configuration"
     print_step "5" "Creating .env file"
-    
+
     ENV_FILE="$SCRIPT_DIR/.env"
-    
+
     print_action "Writing configuration to .env..."
-    
+
     cat > "$ENV_FILE" << EOF
 # Mem0 + Claude Code Integration
 # Generated: $(date)
@@ -299,26 +299,26 @@ export MEM0_MCP_AGENT_MODEL="claude-3-5-sonnet-20241022"
 # export OPENAI_API_KEY="sk-..."
 # export ANTHROPIC_API_KEY="sk-..."
 EOF
-    
+
     chmod 600 "$ENV_FILE"
     print_success "Environment file created: ${GREEN}.env${NC}"
     print_success "File permissions set to 600 (secure)"
-    
+
     # Load the environment
     source "$ENV_FILE"
-    
+
     wait_for_enter
 }
 
 setup_mcp_config() {
     print_header "MCP Configuration"
     print_step "6" "Configuring Model Context Protocol"
-    
+
     MCP_CONFIG="$HOME/.mcp.json"
-    
+
     if [ -f "$MCP_CONFIG" ]; then
         print_warning "~/.mcp.json already exists"
-        
+
         if grep -q '"mem0"' "$MCP_CONFIG" 2>/dev/null; then
             print_info "Mem0 configuration already present"
             if ! confirm_action "Update the configuration?"; then
@@ -328,9 +328,9 @@ setup_mcp_config() {
             fi
         fi
     fi
-    
+
     print_action "Configuring MCP server..."
-    
+
     # Create or update MCP config
     if [ ! -f "$MCP_CONFIG" ]; then
         cat > "$MCP_CONFIG" << 'EOF'
@@ -380,45 +380,45 @@ print("Updated ~/.mcp.json with mem0 configuration")
 PYTHON_SCRIPT
         print_success "Updated ~/.mcp.json"
     fi
-    
+
     wait_for_enter
 }
 
 test_mcp_server() {
     print_header "MCP Server Test"
     print_step "7" "Testing mem0-mcp-server"
-    
+
     print_action "Installing/verifying mem0-mcp-server..."
-    
+
     if uvx mem0-mcp-server --help &> /dev/null; then
         print_success "MCP server is accessible"
     else
         print_error "Failed to access MCP server"
         print_info "This might resolve on first Claude Code launch"
     fi
-    
+
     wait_for_enter
 }
 
 setup_shell_integration() {
     print_header "Shell Integration (Optional)"
     print_step "8" "Auto-load environment variables"
-    
+
     print_info "Would you like to automatically load .env when starting a new shell?"
     echo ""
-    
+
     if confirm_action "Add to shell profile?"; then
         SHELL_RC=""
-        
+
         if [ -n "$ZSH_VERSION" ]; then
             SHELL_RC="$HOME/.zshrc"
         elif [ -n "$BASH_VERSION" ]; then
             SHELL_RC="$HOME/.bashrc"
         fi
-        
+
         if [ -n "$SHELL_RC" ]; then
             LOAD_LINE="source $SCRIPT_DIR/.env  # Mem0 + Claude Code"
-            
+
             if grep -q "source.*mem0.*\.env" "$SHELL_RC" 2>/dev/null; then
                 print_info "Already configured in $SHELL_RC"
             else
@@ -433,26 +433,26 @@ setup_shell_integration() {
         print_info "Skipped. You can manually load with:"
         echo -e "   ${CYAN}source $SCRIPT_DIR/.env${NC}"
     fi
-    
+
     wait_for_enter
 }
 
 run_validation() {
     print_header "Validation & Testing"
     print_step "9" "Running integration tests"
-    
+
     print_action "Loading environment..."
     source "$SCRIPT_DIR/.env"
-    
+
     print_action "Running validation script..."
     echo ""
-    
+
     if [ -f "$SCRIPT_DIR/test_claude_memory.sh" ]; then
         bash "$SCRIPT_DIR/test_claude_memory.sh"
     else
         print_warning "test_claude_memory.sh not found"
         print_info "Performing basic validation..."
-        
+
         # Basic checks
         if [ -n "$MEM0_API_KEY" ]; then
             print_success "Environment loaded correctly"
@@ -460,14 +460,14 @@ run_validation() {
             print_error "Failed to load environment"
         fi
     fi
-    
+
     wait_for_enter
 }
 
 show_completion() {
     clear
     print_header "Setup Complete! 🎉"
-    
+
     echo -e "${GREEN}${BOLD}"
     cat << "EOF"
     ╔═══════════════════════════════════════════════════════╗
@@ -477,7 +477,7 @@ show_completion() {
     ╚═══════════════════════════════════════════════════════╝
 EOF
     echo -e "${NC}"
-    
+
     echo -e "${WHITE}${BOLD}Next Steps:${NC}"
     echo ""
     echo -e "${CYAN}1.${NC} Load your environment:"
@@ -492,7 +492,7 @@ EOF
     echo -e "${CYAN}4.${NC} Check your memories:"
     echo -e "   ${DIM}→${NC} ${CYAN}https://app.mem0.ai${NC}"
     echo ""
-    
+
     echo -e "${YELLOW}${BOLD}For Other Devices:${NC}"
     echo ""
     echo -e "   ${DIM}1.${NC} Install Claude Code and uv"
@@ -500,7 +500,7 @@ EOF
     echo -e "   ${DIM}3.${NC} Run this setup script again"
     echo -e "   ${DIM}4.${NC} Use the ${GREEN}same${NC} user ID: ${GREEN}$MEM0_USER_ID${NC}"
     echo ""
-    
+
     echo -e "${DIM}════════════════════════════════════════════════════════════${NC}"
     echo -e "${WHITE}Documentation:${NC} ${CYAN}README.md${NC}"
     echo -e "${WHITE}Architecture:${NC} ${CYAN}LLD.md${NC}"
@@ -528,4 +528,3 @@ main() {
 
 # Run main function
 main
-

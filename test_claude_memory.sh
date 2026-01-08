@@ -12,7 +12,7 @@ echo ""
 
 # Load environment
 echo "📋 Step 1: Loading environment variables..."
-cd /Users/ankur/D/Playground/mem0
+cd /Users/ankur/D/Playground/memory-setup-claude
 source .env
 
 # Verify env

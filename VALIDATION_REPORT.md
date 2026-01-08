@@ -118,7 +118,7 @@ Test your integration:
 
 ```bash
 # Load environment
-source /Users/ankur/D/Playground/mem0/.env
+source /Users/ankur/D/Playground/memory-setup-claude/.env
 
 # Add a memory
 claude --print --dangerously-skip-permissions "Remember that I prefer TypeScript"

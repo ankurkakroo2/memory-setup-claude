@@ -21,7 +21,7 @@ This project integrates [Mem0 Platform](https://mem0.ai) with [Claude Code](http
 The easiest way to get started:
 
 ```bash
-cd /Users/ankur/D/Playground/mem0
+cd /Users/ankur/D/Playground/memory-setup-claude
 ./setup.sh
 ```
 
@@ -55,7 +55,7 @@ If you prefer manual setup:
 
 1. **Clone and navigate to the repository**
    ```bash
-   cd /Users/ankur/D/Playground/mem0
+   cd /Users/ankur/D/Playground/memory-setup-claude
    ```
 
 2. **Configure environment variables**
@@ -96,7 +96,7 @@ If you prefer manual setup:
 Add to your shell profile to automatically load environment variables:
 
 ```bash
-echo 'source /Users/ankur/D/Playground/mem0/.env' >> ~/.zshrc
+echo 'source /Users/ankur/D/Playground/memory-setup-claude/.env' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -112,7 +112,7 @@ See [LLD.md](LLD.md) for detailed architecture documentation including:
 ## Project Structure
 
 ```
-mem0/
+memory-setup-claude/
 ├── .env                      # Your config (git-ignored)
 ├── .env.example              # Template for .env
 ├── .gitignore                # Git ignore rules
